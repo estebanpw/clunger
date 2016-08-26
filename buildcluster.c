@@ -95,7 +95,8 @@ int main(int argc, char ** av){
             	//We have a word to align
 
             	if(protoNum == 0){ //First prototype
-            		memcpy(clu->prototype, wf, seedSize);
+            		clu->prototype[seedSize] = '\0';
+            		strncpy(clu->prototype, wf, seedSize);
             		clu->reps = (l_item *) get_mem_from_pool(sizeof(l_item));
             		clu->reps->pos = pos;
             		clu->reps->seq = seqN;
@@ -133,7 +134,8 @@ int main(int argc, char ** av){
 	            	if(clu == NULL){
 	            		//Add new prototype
 	            		clu = (Cluster *) get_mem_from_pool(sizeof(Cluster));
-	            		memcpy(clu->prototype, wf, seedSize);
+	            		strncpy(clu->prototype, wf, seedSize);
+	            		clu->prototype[seedSize]='\0';
 	            		previous->next = clu;
 	            		clu->reps = (l_item *) get_mem_from_pool(sizeof(l_item));
 	            		clu->reps->pos = pos;

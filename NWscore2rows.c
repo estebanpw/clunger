@@ -36,6 +36,9 @@ RETURNS
 
 
 void goodPrint(int64_t a){ if(a>=0) printf("  %"PRId64"",a); else printf(" %"PRId64"",a);}
+
+
+static int redir[32][2]={0,3,0,4,0,5,1,6,2,7,3,8,4,9,5,10,6,11,7,12,8,13,9,14,10,15,11,16,12,17,13,18,14,19,15,20,16,21,17,22,18,23,19,24,20,25,21,26,22,27,23,28,24,29,25,30,26,31,27,31,28,31,29,31};
 static int PAM[5][5]={5,-3,-3,-3,0,-3,5,-3,-3,0,-3,-3,5-3,0,-3,-3,-3,5,0,0,0,0,0,0};
 int valOfNucl(char c){
 	if(c=='A') return 0;
@@ -73,6 +76,9 @@ struct cell NWscore2rows (char * X, uint64_t Xstart, uint64_t Xend, char * Y, ui
     //First row. iCounter serves as counter from zero
     //printf("..0%%");
     for(i=Ystart;i<Yend;i++){
+
+
+
     	f0[iCounter].score = PAM[valOfNucl(X[Xstart])][valOfNucl(Y[i])];
     	f0[iCounter].igaps = 0;
     	f0[iCounter].egaps = 0;
