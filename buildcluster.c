@@ -157,7 +157,7 @@ int main(int argc, char ** av){
         }
         long double computed = (long double)pos*100/dbByteSize;
         if(pos % 1000 == 0){
-        	fprintf(stdout, "Processed %"PRIu64" bytes from %"PRIu64", that is, a %Le\n", pos, dbByteSize, computed);
+        	fprintf(stdout, "Computed approximately %d%%\n", (int)computed);
         }
 		c = buffered_fgetc(readBuffer, &posBuffer, &tReadBuffer, database);
 

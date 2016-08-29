@@ -28,7 +28,7 @@ char buffered_fgetc(char *buffer, uint64_t *pos, uint64_t *read, FILE *f) {
 }
 
 /* Memory pool: allocates space once to later on give pointer positions
-   	@param bytes: Requested bytes
+   	@param bytes: Requested bytes (-1 for free)
    	@return: A void pointer that points to a position with the requested bytes
 */
 
