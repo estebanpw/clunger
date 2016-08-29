@@ -51,7 +51,7 @@ int main(int argc, char ** av){
 	
 	//Variables to account for positions
 	int strandF = 1, strandR = 0;
-	uint64_t pos = 0, crrSeqL = 0, protoNum = 0; //Absolute coordinates; current sequence length; Number of used prototypes
+	uint64_t pos = 0, crrSeqL = 0, protoNum = 0, currPos; //Absolute coordinates; current sequence length; Number of used prototypes, current position in read
 	int64_t seqN = -1, alignScore; //Sequence Number; alignment score for a word against a prototype
 	
 	//Print info
@@ -72,13 +72,14 @@ int main(int argc, char ** av){
                 seqN++; // New sequence
                 crrSeqL = 0; // Reset buffered sequence length
                 pos++; // Absolute coordinates: add one for the "*"
+                currPos = 0;
             }
 	    	c = buffered_fgetc(readBuffer, &posBuffer, &tReadBuffer, database); //First char
         	continue;
         }
 
         //See if sequence has to be broken
-        if(c == 'A' || c == 'C' || c == 'G' || c == 'T') crrSeqL++; else crrSeqL = 0;
+        if(c == 'A' || c == 'C' || c == 'G' || c == 'T') {crrSeqL++;currPos++;} else {crrSeqL = 0;currPos = 0;}
         
         //Shift left and right here
         memcpy(wf, wf+1, seedSize-1); //Copy all characters one position to the left
@@ -98,7 +99,7 @@ int main(int argc, char ** av){
             		clu->prototype[seedSize] = '\0';
             		strncpy(clu->prototype, wf, seedSize);
             		clu->reps = (l_item *) get_mem_from_pool(sizeof(l_item));
-            		clu->reps->pos = pos;
+            		clu->reps->pos = currPos - seedSize;
             		clu->reps->seq = seqN;
             		clu->next = NULL;
             		protoNum++;
@@ -113,16 +114,20 @@ int main(int argc, char ** av){
             				//If we can align it (first prototype)
 							//ALIGN HERE
 							align_result = NWscore2rows(wf, 0, seedSize, clu->prototype, 0, seedSize, IGAP, EGAP, mc, r0, r1);
-							//printf("Aligned:\n%s\n%s\nWith score :%"PRId64" ident: %"PRIu64" len: %"PRIu64"\n", wf, clu->prototype, align_result.score, align_result.ident, align_result.xe-align_result.xs);
+							alignScore = align_result.score;
+							//printf("Comparing:\n%s\n%s\nWith score :%"PRId64" ident: %"PRIu64" len: %"PRIu64"\n", wf, clu->prototype, align_result.score, align_result.ident, align_result.xe-align_result.xs);
 							//getchar();
             				if(alignScore > MIN_SCORE){
+            					//printf("Success\n");
             					//Add to current
-            					l_item * aux_rep = clu->reps->next;
-            					clu->reps->next = (l_item *) get_mem_from_pool(sizeof(l_item));
-            					clu->reps->pos = pos;
-            					clu->reps->seq = seqN;
-            					clu->reps->next = aux_rep;
+            					l_item * aux_rep = (l_item *) get_mem_from_pool(sizeof(l_item));
+            					aux_rep->pos = currPos - seedSize;
+            					aux_rep->seq = seqN;
+            					aux_rep->next = clu->reps;
+            					clu->reps = aux_rep;
+            					//traverseClusters(c_head, stdout);
             					break;
+
             				}
 
             			}
@@ -138,11 +143,11 @@ int main(int argc, char ** av){
 	            		clu->prototype[seedSize]='\0';
 	            		previous->next = clu;
 	            		clu->reps = (l_item *) get_mem_from_pool(sizeof(l_item));
-	            		clu->reps->pos = pos;
+	            		clu->reps->pos = currPos - seedSize;
 	            		clu->reps->seq = seqN;
 	            		clu->next = NULL;
 	            		protoNum++;
-
+	            		//printf("Number of prototypes: %"PRIu64"\n", protoNum);
 	            	}
             	}
 

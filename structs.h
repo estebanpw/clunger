@@ -5,7 +5,7 @@
 #define MAX_K 32
 #define INIT_CLUSTERS 100000
 #define READBUF 100000
-#define MIN_SCORE 50
+#define MIN_SCORE 28
 #define IGAP -5
 #define EGAP -2
 

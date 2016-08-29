@@ -58,15 +58,19 @@ char * get_mem_from_pool(int64_t bytes){
 */
 
 void traverseClusters(Cluster * head, FILE * out){
+	fprintf(out, "======TRAVERSING CLUSTERS=====");
 	l_item * l;
-	Cluster * c;
+	Cluster * c = head;
 	while(c != NULL){
-		fprintf(out, "\nCLUSTER\n%s\n@", c->prototype);
+		fprintf(out, "\n>%s@", c->prototype);
+		
 		l = c->reps;
 		while(l != NULL){
 			fprintf(out, "(%"PRIu64", %"PRIu64")", l->pos, l->seq);
 			l = l->next;
 		}
+		
 		c = c->next;
 	}
+	fprintf(out, "\n======DONE=====\n");
 }

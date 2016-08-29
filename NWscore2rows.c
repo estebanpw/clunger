@@ -121,6 +121,7 @@ struct cell NWscore2rows (char * X, uint64_t Xstart, uint64_t Xend, char * Y, ui
 		//goodPrint(f1[0].score);
 		jCounter=1;
 		for(j=Ystart+1;j<Yend;j++){
+		//for(j=redir[i][0]+1;j<redir[i][1];j++){
 			//Check if max in row has changed
 			if(jCounter > 1 && mf.score <= f0[jCounter-2].score){
 				mf = f0[jCounter-2];
